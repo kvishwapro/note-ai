@@ -60,12 +60,15 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
                     sx={{
                         width: "80%",
                         maxWidth: 600,
+                        maxHeight: "80vh",
                         bgcolor: "background.paper",
                         border: "1px solid #e0e0e0",
                         borderRadius: 2,
                         boxShadow: 5,
                         p: 4,
                         position: "relative",
+                        display: "flex",
+                        flexDirection: "column",
                     }}
                 >
                     <Box sx={{ position: "absolute", right: 8, top: 8, display: "flex", gap: 1 }}>
@@ -106,18 +109,27 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
                         onChange={(e) => setTitle(e.target.value)}
                         fullWidth
                     />
-                    <InputBase
+                    <Box
                         sx={{
-                            width: "100%",
-                            fontSize: "1rem",
-                            lineHeight: 1.5,
+                            flex: 1,
+                            overflow: "auto",
+                            mb: 2,
                         }}
-                        placeholder="Take a note..."
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        multiline
-                        fullWidth
-                    />
+                    >
+                        <InputBase
+                            sx={{
+                                width: "100%",
+                                fontSize: "1rem",
+                                lineHeight: 1.5,
+                                minHeight: 120,
+                            }}
+                            placeholder="Take a note..."
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            multiline
+                            fullWidth
+                        />
+                    </Box>
                     <Box
                         sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}
                     >

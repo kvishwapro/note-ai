@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Typography,
     Box,
@@ -9,6 +9,8 @@ import {
     Paper,
     InputBase,
     IconButton,
+    CircularProgress,
+    Alert,
 } from "@mui/material";
 import {
     CheckBox,
@@ -17,8 +19,7 @@ import {
     Archive,
     MoreVert,
 } from "@mui/icons-material";
-import { useAppSelector, useAppDispatch } from "../../src/redux/hooks";
-import { addNote, updateNote } from "../../src/redux/slices/notesSlice";
+import { useNotesApi } from "../../src/hooks/useNotesApi";
 import NoteEditor from "@/components/NoteEditor";
 import PageLayout from "@/components/PageLayout";
 
@@ -33,8 +34,19 @@ const NotesPage = () => {
         content: string;
     } | null>(null);
 
-    const notes = useAppSelector((state) => state.notes.notes);
-    const dispatch = useAppDispatch();
+    const {
+        notes,
+        loading,
+        error,
+        createNote,
+        updateNote,
+        getNotesWithCache,
+        clearApiError,
+    } = useNotesApi();
+
+    useEffect(() => {
+        getNotesWithCache();
+    }, []);
 
     const handleInputFocus = () => {
         setIsExpanded(true);
@@ -43,28 +55,50 @@ const NotesPage = () => {
     const handleNoteClick = (note: {
         id: number;
         title: string;
-        content: string;
+        notes: string;
     }) => {
-        setSelectedNote({ ...note, id: String(note.id) });
+        setSelectedNote({ 
+            id: String(note.id), 
+            title: note.title, 
+            content: note.notes 
+        });
         setIsModalOpen(true);
     };
 
-    const handleUpdateNote = (updatedNote: {
+    const handleUpdateNote = async (updatedNote: {
         id: string;
         title: string;
         content: string;
     }) => {
-        dispatch(updateNote({ ...updatedNote, id: Number(updatedNote.id) }));
+        try {
+            await updateNote(Number(updatedNote.id), {
+                title: updatedNote.title,
+                notes: updatedNote.content,
+            });
+        } catch (err) {
+            console.error("Failed to update note:", err);
+        }
     };
 
-    const handleClose = () => {
+    const handleClose = async () => {
         if (noteTitle.trim() || noteInput.trim()) {
-            dispatch(addNote({ title: noteTitle, content: noteInput }));
+            try {
+                await createNote({
+                    title: noteTitle || "Untitled",
+                    notes: noteInput,
+                });
+            } catch (err) {
+                console.error("Failed to create note:", err);
+            }
         }
         setIsExpanded(false);
         setIsModalOpen(false);
         setNoteTitle("");
         setNoteInput("");
+    };
+
+    const handleCloseError = () => {
+        clearApiError();
     };
 
     return (
@@ -74,6 +108,16 @@ const NotesPage = () => {
                     flexGrow: 1,
                 }}
             >
+                {error && (
+                    <Alert 
+                        severity="error" 
+                        onClose={handleCloseError}
+                        sx={{ mb: 2 }}
+                    >
+                        {error}
+                    </Alert>
+                )}
+
                 {isModalOpen && (
                     <Box
                         sx={{
@@ -248,6 +292,7 @@ const NotesPage = () => {
                                     <Box>
                                         <IconButton
                                             onClick={handleClose}
+                                            disabled={loading}
                                             sx={{
                                                 fontSize: "14px",
                                                 fontWeight: 500,
@@ -260,7 +305,7 @@ const NotesPage = () => {
                                                 },
                                             }}
                                         >
-                                            Close
+                                            {loading ? <CircularProgress size={16} /> : "Close"}
                                         </IconButton>
                                     </Box>
                                 </Box>
@@ -268,68 +313,94 @@ const NotesPage = () => {
                         </Paper>
                     </Box>
 
-                    <Box
-                        sx={{
-                            columns: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
-                            columnGap: 2,
-                            "& > *": {
-                                breakInside: "avoid",
-                                marginBottom: 2,
-                                display: "inline-block",
-                                width: "100%",
-                            },
-                        }}
-                    >
-                        {notes.map((note) => (
-                            <Card
-                                key={note.id}
-                                onClick={() => handleNoteClick(note)}
-                                sx={{
-                                    border: "1px solid #e0e0e0",
-                                    borderRadius: 2,
-                                    boxShadow: "none",
-                                    transition: "all 0.2s ease-in-out",
-                                    cursor: "pointer",
-                                    "&:hover": {
-                                        boxShadow: 2,
-                                    },
-                                    backgroundColor: "#fff",
-                                    overflow: "visible",
-                                }}
-                            >
-                                <CardContent
-                                    sx={{ p: 2, "&:last-child": { pb: 2 } }}
+                    {loading && notes.length === 0 ? (
+                        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        <Box
+                            sx={{
+                                columns: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
+                                columnGap: 2,
+                                "& > *": {
+                                    breakInside: "avoid",
+                                    marginBottom: 2,
+                                    display: "inline-block",
+                                    width: "100%",
+                                },
+                            }}
+                        >
+                            {notes.map((note) => (
+                                <Card
+                                    key={note.id}
+                                    onClick={() => handleNoteClick(note)}
+                                    sx={{
+                                        border: "1px solid #e0e0e0",
+                                        borderRadius: 2,
+                                        boxShadow: "none",
+                                        transition: "all 0.2s ease-in-out",
+                                        cursor: "pointer",
+                                        "&:hover": {
+                                            boxShadow: 2,
+                                        },
+                                        backgroundColor: "#fff",
+                                        overflow: "hidden",
+                                        maxHeight: 300,
+                                        display: "flex",
+                                        flexDirection: "column",
+                                    }}
                                 >
-                                    {note.title && (
-                                        <Typography
-                                            variant="subtitle1"
-                                            component="div"
-                                            sx={{
-                                                fontWeight: 500,
-                                                mb: 1,
-                                                color: "#202124",
-                                                fontSize: "16px",
-                                                lineHeight: 1.4,
-                                            }}
-                                        >
-                                            {note.title}
-                                        </Typography>
-                                    )}
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: "#5f6368",
-                                            fontSize: "14px",
-                                            lineHeight: 1.4,
-                                            whiteSpace: "pre-wrap",
+                                    <CardContent
+                                        sx={{ 
+                                            p: 2, 
+                                            "&:last-child": { pb: 2 },
+                                            flex: 1,
+                                            overflow: "hidden",
+                                            display: "flex",
+                                            flexDirection: "column",
                                         }}
                                     >
-                                        {note.content}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </Box>
+                                        {note.title && (
+                                            <Typography
+                                                variant="subtitle1"
+                                                component="div"
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    mb: 1,
+                                                    color: "#202124",
+                                                    fontSize: "16px",
+                                                    lineHeight: 1.4,
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    whiteSpace: "nowrap",
+                                                }}
+                                            >
+                                                {note.title}
+                                            </Typography>
+                                        )}
+                                        <Box sx={{ flex: 1, overflow: "hidden" }}>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    color: "#5f6368",
+                                                    fontSize: "14px",
+                                                    lineHeight: 1.4,
+                                                    whiteSpace: "pre-wrap",
+                                                    display: "-webkit-box",
+                                                    WebkitLineClamp: 8,
+                                                    WebkitBoxOrient: "vertical",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }}
+                                            >
+                                                {note.notes}
+                                            </Typography>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </Box>
+                    )}
                 </Box>
                 {selectedNote && (
                     <NoteEditor
