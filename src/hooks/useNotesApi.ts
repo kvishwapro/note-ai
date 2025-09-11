@@ -1,4 +1,3 @@
-import { useAuth } from "@clerk/nextjs";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
     fetchAllNotes,
@@ -12,7 +11,7 @@ import { NoteCreate, NoteUpdate } from "../api/notesApi";
 
 export const useNotesApi = () => {
     const dispatch = useAppDispatch();
-    const { getToken } = useAuth();
+    const getToken = async () => null;
     const { notes, loading, error, lastFetched } = useAppSelector(
         (state) => state.notes,
     );

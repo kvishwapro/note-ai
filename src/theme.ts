@@ -22,7 +22,7 @@ const theme = createTheme({
         borderRadius: 12, // M3 border radius
     },
     typography: {
-        fontFamily: "Roboto, sans-serif", // M3 typography
+        fontFamily: '"Inter", sans-serif', // Using Inter font
         fontSize: 16, // Increase base font size
     },
     components: {

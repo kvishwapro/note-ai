@@ -2,7 +2,6 @@
 import React from "react";
 import { AppBar, Toolbar, TextField, Box, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const Header = () => {
     return (
@@ -43,14 +42,6 @@ const Header = () => {
                             ),
                         }}
                     />
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <SignedOut>
-                        <SignInButton mode="modal" />
-                    </SignedOut>
-                    <SignedIn>
-                        <UserButton afterSignOutUrl="/" />
-                    </SignedIn>
                 </Box>
             </Toolbar>
         </AppBar>

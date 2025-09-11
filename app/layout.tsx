@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import ThemeProvider from "../src/ThemeProvider";
 import ReduxProvider from "../src/redux/ReduxProvider";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+
+const inter = Inter({
+    subsets: ["latin"],
+    display: "swap",
+});
 
 export const metadata: Metadata = {
     title: "Note AI",
@@ -16,18 +21,16 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <ClerkProvider>
-            <html lang="en">
-                <body suppressHydrationWarning>
-                    <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-                        <ReduxProvider>
-                            <ThemeProvider>
-                                <main>{children}</main>
-                            </ThemeProvider>
-                        </ReduxProvider>
-                    </AppRouterCacheProvider>
-                </body>
-            </html>
-        </ClerkProvider>
+        <html lang="en" className={inter.className}>
+            <body suppressHydrationWarning>
+                <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+                    <ReduxProvider>
+                        <ThemeProvider>
+                            <main>{children}</main>
+                        </ThemeProvider>
+                    </ReduxProvider>
+                </AppRouterCacheProvider>
+            </body>
+        </html>
     );
 }

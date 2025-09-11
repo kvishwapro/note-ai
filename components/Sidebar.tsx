@@ -17,7 +17,7 @@ import NotesIcon from "@mui/icons-material/Notes";
 import TaskIcon from "@mui/icons-material/Task";
 import LabelIcon from "@mui/icons-material/Label";
 import { useRouter, usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
+
 
 const Sidebar: React.FC = () => {
     const drawerWidth = 280; // M3 recommended width
@@ -128,16 +128,6 @@ const Sidebar: React.FC = () => {
                 </List>
             </Box>
             <Box sx={{ mt: "auto", p: 2 }}>
-                <UserButton
-                    appearance={{
-                        elements: {
-                            avatarBox: {
-                                width: 32,
-                                height: 32,
-                            },
-                        },
-                    }}
-                />
             </Box>
         </Drawer>
     );
