@@ -57,10 +57,10 @@ const NotesPage = () => {
         title: string;
         notes: string;
     }) => {
-        setSelectedNote({ 
-            id: String(note.id), 
-            title: note.title, 
-            content: note.notes 
+        setSelectedNote({
+            id: String(note.id),
+            title: note.title,
+            content: note.notes,
         });
         setIsModalOpen(true);
     };
@@ -109,8 +109,8 @@ const NotesPage = () => {
                 }}
             >
                 {error && (
-                    <Alert 
-                        severity="error" 
+                    <Alert
+                        severity="error"
                         onClose={handleCloseError}
                         sx={{ mb: 2 }}
                     >
@@ -147,6 +147,13 @@ const NotesPage = () => {
                             mb: 4,
                             display: "flex",
                             justifyContent: "center",
+                            position: "sticky",
+                            top: 0,
+                            zIndex: 1,
+                            backgroundColor: "#FEF7FF",
+                            py: 2,
+                            mx: -2,
+                            px: 2,
                         }}
                     >
                         <Paper
@@ -164,6 +171,7 @@ const NotesPage = () => {
                                 minHeight: isExpanded ? 120 : 48,
                                 px: 2,
                                 py: 0,
+                                backgroundColor: "#FEF7FF",
                             }}
                         >
                             {isExpanded && (
@@ -305,7 +313,11 @@ const NotesPage = () => {
                                                 },
                                             }}
                                         >
-                                            {loading ? <CircularProgress size={16} /> : "Close"}
+                                            {loading ? (
+                                                <CircularProgress size={16} />
+                                            ) : (
+                                                "Close"
+                                            )}
                                         </IconButton>
                                     </Box>
                                 </Box>
@@ -314,7 +326,13 @@ const NotesPage = () => {
                     </Box>
 
                     {loading && notes.length === 0 ? (
-                        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                mt: 4,
+                            }}
+                        >
                             <CircularProgress />
                         </Box>
                     ) : (
@@ -351,8 +369,8 @@ const NotesPage = () => {
                                     }}
                                 >
                                     <CardContent
-                                        sx={{ 
-                                            p: 2, 
+                                        sx={{
+                                            p: 2,
                                             "&:last-child": { pb: 2 },
                                             flex: 1,
                                             overflow: "hidden",
@@ -378,7 +396,9 @@ const NotesPage = () => {
                                                 {note.title}
                                             </Typography>
                                         )}
-                                        <Box sx={{ flex: 1, overflow: "hidden" }}>
+                                        <Box
+                                            sx={{ flex: 1, overflow: "hidden" }}
+                                        >
                                             <Typography
                                                 variant="body2"
                                                 sx={{

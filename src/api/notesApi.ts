@@ -18,7 +18,9 @@ export interface NoteUpdate {
     notes: string;
 }
 
-const createApiClient = (getToken: () => Promise<string | null>): AxiosInstance => {
+const createApiClient = (
+    getToken: () => Promise<string | null>,
+): AxiosInstance => {
     const client = axios.create({
         baseURL: API_BASE_URL,
         headers: {
@@ -38,31 +40,46 @@ const createApiClient = (getToken: () => Promise<string | null>): AxiosInstance 
     return client;
 };
 
-export const createNote = async (noteData: NoteCreate, getToken: () => Promise<string | null>): Promise<Note> => {
+export const createNote = async (
+    noteData: NoteCreate,
+    getToken: () => Promise<string | null>,
+): Promise<Note> => {
     const client = createApiClient(getToken);
     const response = await client.post<Note>("/notes/", noteData);
     return response.data;
 };
 
-export const getNoteById = async (noteId: number, getToken: () => Promise<string | null>): Promise<Note> => {
+export const getNoteById = async (
+    noteId: number,
+    getToken: () => Promise<string | null>,
+): Promise<Note> => {
     const client = createApiClient(getToken);
     const response = await client.get<Note>(`/notes/${noteId}`);
     return response.data;
 };
 
-export const updateNote = async (noteId: number, noteData: NoteUpdate, getToken: () => Promise<string | null>): Promise<Note> => {
+export const updateNote = async (
+    noteId: number,
+    noteData: NoteUpdate,
+    getToken: () => Promise<string | null>,
+): Promise<Note> => {
     const client = createApiClient(getToken);
     const response = await client.put<Note>(`/notes/${noteId}`, noteData);
     return response.data;
 };
 
-export const deleteNote = async (noteId: number, getToken: () => Promise<string | null>): Promise<Note> => {
+export const deleteNote = async (
+    noteId: number,
+    getToken: () => Promise<string | null>,
+): Promise<Note> => {
     const client = createApiClient(getToken);
     const response = await client.delete<Note>(`/notes/${noteId}`);
     return response.data;
 };
 
-export const getAllNotes = async (getToken: () => Promise<string | null>): Promise<Note[]> => {
+export const getAllNotes = async (
+    getToken: () => Promise<string | null>,
+): Promise<Note[]> => {
     const client = createApiClient(getToken);
     const response = await client.get<Note[]>("/notes/");
     return response.data;

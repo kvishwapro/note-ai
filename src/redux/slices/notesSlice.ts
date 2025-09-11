@@ -1,5 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { Note, NoteCreate, NoteUpdate, createNote, getNoteById, updateNote, deleteNote, getAllNotes } from "../../api/notesApi";
+import {
+    Note,
+    NoteCreate,
+    NoteUpdate,
+    createNote,
+    getNoteById,
+    updateNote,
+    deleteNote,
+    getAllNotes,
+} from "../../api/notesApi";
 
 interface NotesState {
     notes: Note[];
@@ -20,36 +29,62 @@ export const fetchAllNotes = createAsyncThunk(
     "notes/fetchAll",
     async (getToken: () => Promise<string | null>) => {
         return await getAllNotes(getToken);
-    }
+    },
 );
 
 export const fetchNoteById = createAsyncThunk(
     "notes/fetchById",
-    async ({ noteId, getToken }: { noteId: number; getToken: () => Promise<string | null> }) => {
+    async ({
+        noteId,
+        getToken,
+    }: {
+        noteId: number;
+        getToken: () => Promise<string | null>;
+    }) => {
         return await getNoteById(noteId, getToken);
-    }
+    },
 );
 
 export const createNewNote = createAsyncThunk(
     "notes/create",
-    async ({ noteData, getToken }: { noteData: NoteCreate; getToken: () => Promise<string | null> }) => {
+    async ({
+        noteData,
+        getToken,
+    }: {
+        noteData: NoteCreate;
+        getToken: () => Promise<string | null>;
+    }) => {
         return await createNote(noteData, getToken);
-    }
+    },
 );
 
 export const updateExistingNote = createAsyncThunk(
     "notes/update",
-    async ({ noteId, noteData, getToken }: { noteId: number; noteData: NoteUpdate; getToken: () => Promise<string | null> }) => {
+    async ({
+        noteId,
+        noteData,
+        getToken,
+    }: {
+        noteId: number;
+        noteData: NoteUpdate;
+        getToken: () => Promise<string | null>;
+    }) => {
         return await updateNote(noteId, noteData, getToken);
-    }
+    },
 );
 
 export const deleteExistingNote = createAsyncThunk(
     "notes/delete",
-    async ({ noteId, getToken }: { noteId: number; getToken: () => Promise<string | null> }) => {
+    async ({
+        noteId,
+        getToken,
+    }: {
+        noteId: number;
+        getToken: () => Promise<string | null>;
+    }) => {
         await deleteNote(noteId, getToken);
         return noteId;
-    }
+    },
 );
 
 export const notesSlice = createSlice({
@@ -64,13 +99,17 @@ export const notesSlice = createSlice({
             state.notes.push(action.payload);
         },
         updateNoteLocal: (state, action: PayloadAction<Note>) => {
-            const index = state.notes.findIndex(note => note.id === action.payload.id);
+            const index = state.notes.findIndex(
+                (note) => note.id === action.payload.id,
+            );
             if (index !== -1) {
                 state.notes[index] = action.payload;
             }
         },
         deleteNoteLocal: (state, action: PayloadAction<number>) => {
-            state.notes = state.notes.filter(note => note.id !== action.payload);
+            state.notes = state.notes.filter(
+                (note) => note.id !== action.payload,
+            );
         },
     },
     extraReducers: (builder) => {
@@ -96,7 +135,9 @@ export const notesSlice = createSlice({
             })
             .addCase(fetchNoteById.fulfilled, (state, action) => {
                 state.loading = false;
-                const existingIndex = state.notes.findIndex(note => note.id === action.payload.id);
+                const existingIndex = state.notes.findIndex(
+                    (note) => note.id === action.payload.id,
+                );
                 if (existingIndex !== -1) {
                     state.notes[existingIndex] = action.payload;
                 } else {
@@ -127,7 +168,9 @@ export const notesSlice = createSlice({
             })
             .addCase(updateExistingNote.fulfilled, (state, action) => {
                 state.loading = false;
-                const index = state.notes.findIndex(note => note.id === action.payload.id);
+                const index = state.notes.findIndex(
+                    (note) => note.id === action.payload.id,
+                );
                 if (index !== -1) {
                     state.notes[index] = action.payload;
                 }
@@ -143,7 +186,9 @@ export const notesSlice = createSlice({
             })
             .addCase(deleteExistingNote.fulfilled, (state, action) => {
                 state.loading = false;
-                state.notes = state.notes.filter(note => note.id !== action.payload);
+                state.notes = state.notes.filter(
+                    (note) => note.id !== action.payload,
+                );
             })
             .addCase(deleteExistingNote.rejected, (state, action) => {
                 state.loading = false;
@@ -152,6 +197,7 @@ export const notesSlice = createSlice({
     },
 });
 
-export const { clearError, addNoteLocal, updateNoteLocal, deleteNoteLocal } = notesSlice.actions;
+export const { clearError, addNoteLocal, updateNoteLocal, deleteNoteLocal } =
+    notesSlice.actions;
 
 export default notesSlice.reducer;

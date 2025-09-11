@@ -13,7 +13,9 @@ import { NoteCreate, NoteUpdate } from "../api/notesApi";
 export const useNotesApi = () => {
     const dispatch = useAppDispatch();
     const { getToken } = useAuth();
-    const { notes, loading, error, lastFetched } = useAppSelector((state) => state.notes);
+    const { notes, loading, error, lastFetched } = useAppSelector(
+        (state) => state.notes,
+    );
 
     const getAllNotes = async () => {
         return dispatch(fetchAllNotes(getToken));

@@ -53,28 +53,30 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
         dispatch(closeShareModal());
     };
 
-    const handlePermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setSelectedPermission(event.target.value as 'view' | 'edit'));
+    const handlePermissionChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        dispatch(setSelectedPermission(event.target.value as "view" | "edit"));
     };
 
     const handleGenerateToken = async () => {
         dispatch(generateTokenStart());
-        
+
         try {
             // Simulate API call - replace with actual API integration later
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
             const token = `note_${noteId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
             const expiresAt = new Date();
             expiresAt.setDate(expiresAt.getDate() + parseInt(expiryDays));
-            
+
             const shareToken = {
                 token,
                 expiresAt: expiresAt.toISOString(),
                 permission: selectedPermission,
                 noteId,
             };
-            
+
             dispatch(generateTokenSuccess(shareToken));
         } catch (error) {
             dispatch(generateTokenFailure());
@@ -87,7 +89,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                 await navigator.clipboard.writeText(shareLink);
                 setCopySuccess(true);
             } catch (err) {
-                console.error('Failed to copy link:', err);
+                console.error("Failed to copy link:", err);
             }
         }
     };
@@ -141,15 +143,29 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                         </Typography>
                     </Box>
 
-                    <Typography variant="body2" sx={{ mb: 3, color: "#5f6368" }}>
-                        Share &ldquo;{noteTitle}&rdquo; with others by generating a secure link
+                    <Typography
+                        variant="body2"
+                        sx={{ mb: 3, color: "#5f6368" }}
+                    >
+                        Share &ldquo;{noteTitle}&rdquo; with others by
+                        generating a secure link
                     </Typography>
 
                     <Divider sx={{ mb: 3 }} />
 
                     {/* Permission Selection */}
-                    <FormControl component="fieldset" sx={{ mb: 3, width: "100%" }}>
-                        <FormLabel component="legend" sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <FormControl
+                        component="fieldset"
+                        sx={{ mb: 3, width: "100%" }}
+                    >
+                        <FormLabel
+                            component="legend"
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                mb: 2,
+                            }}
+                        >
                             <Security sx={{ mr: 1, fontSize: 20 }} />
                             Permission Level
                         </FormLabel>
@@ -163,10 +179,16 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                                 control={<Radio />}
                                 label={
                                     <Box>
-                                        <Typography variant="body2" fontWeight={500}>
+                                        <Typography
+                                            variant="body2"
+                                            fontWeight={500}
+                                        >
                                             View Only
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary">
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                        >
                                             Recipients can only read the note
                                         </Typography>
                                     </Box>
@@ -177,11 +199,18 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                                 control={<Radio />}
                                 label={
                                     <Box>
-                                        <Typography variant="body2" fontWeight={500}>
+                                        <Typography
+                                            variant="body2"
+                                            fontWeight={500}
+                                        >
                                             Can Edit
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary">
-                                            Recipients can view and edit the note
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                        >
+                                            Recipients can view and edit the
+                                            note
                                         </Typography>
                                     </Box>
                                 }
@@ -191,7 +220,13 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
 
                     {/* Expiry Selection */}
                     <Box sx={{ mb: 3 }}>
-                        <FormLabel sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                        <FormLabel
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                mb: 2,
+                            }}
+                        >
                             <AccessTime sx={{ mr: 1, fontSize: 20 }} />
                             Link Expiry
                         </FormLabel>
@@ -221,7 +256,13 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                             variant="contained"
                             onClick={handleGenerateToken}
                             disabled={isGeneratingToken}
-                            startIcon={isGeneratingToken ? <CircularProgress size={20} /> : <Share />}
+                            startIcon={
+                                isGeneratingToken ? (
+                                    <CircularProgress size={20} />
+                                ) : (
+                                    <Share />
+                                )
+                            }
                             sx={{
                                 mb: 2,
                                 width: "100%",
@@ -230,14 +271,19 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                                 fontSize: "16px",
                             }}
                         >
-                            {isGeneratingToken ? "Generating Link..." : "Generate Share Link"}
+                            {isGeneratingToken
+                                ? "Generating Link..."
+                                : "Generate Share Link"}
                         </Button>
                     )}
 
                     {/* Share Link Display */}
                     {shareLink && (
                         <Box sx={{ mb: 2 }}>
-                            <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                            <Typography
+                                variant="body2"
+                                sx={{ mb: 1, fontWeight: 500 }}
+                            >
                                 Share Link Generated:
                             </Typography>
                             <Box
@@ -269,14 +315,26 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                                     <ContentCopy fontSize="small" />
                                 </IconButton>
                             </Box>
-                            <Alert severity="info" sx={{ mt: 2, fontSize: "12px" }}>
-                                This link will expire in {expiryDays} day{expiryDays !== "1" ? "s" : ""} and grants {selectedPermission} access.
+                            <Alert
+                                severity="info"
+                                sx={{ mt: 2, fontSize: "12px" }}
+                            >
+                                This link will expire in {expiryDays} day
+                                {expiryDays !== "1" ? "s" : ""} and grants{" "}
+                                {selectedPermission} access.
                             </Alert>
                         </Box>
                     )}
 
                     {/* Action Buttons */}
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 3 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            gap: 1,
+                            mt: 3,
+                        }}
+                    >
                         <Button
                             onClick={handleClose}
                             sx={{
@@ -307,9 +365,13 @@ const ShareModal: React.FC<ShareModalProps> = ({ noteId, noteTitle }) => {
                 open={copySuccess}
                 autoHideDuration={3000}
                 onClose={handleCloseCopySuccess}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-                <Alert onClose={handleCloseCopySuccess} severity="success" sx={{ width: '100%' }}>
+                <Alert
+                    onClose={handleCloseCopySuccess}
+                    severity="success"
+                    sx={{ width: "100%" }}
+                >
                     Link copied to clipboard!
                 </Alert>
             </Snackbar>

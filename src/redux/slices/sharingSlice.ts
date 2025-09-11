@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface ShareToken {
     token: string;
     expiresAt: string;
-    permission: 'view' | 'edit';
+    permission: "view" | "edit";
     noteId: number;
 }
 
@@ -13,7 +13,7 @@ export interface ShareState {
     shareTokens: ShareToken[];
     isGeneratingToken: boolean;
     shareLink: string | null;
-    selectedPermission: 'view' | 'edit';
+    selectedPermission: "view" | "edit";
 }
 
 const initialState: ShareState = {
@@ -22,7 +22,7 @@ const initialState: ShareState = {
     shareTokens: [],
     isGeneratingToken: false,
     shareLink: null,
-    selectedPermission: 'view',
+    selectedPermission: "view",
 };
 
 export const sharingSlice = createSlice({
@@ -38,9 +38,12 @@ export const sharingSlice = createSlice({
             state.isShareModalOpen = false;
             state.currentNoteId = null;
             state.shareLink = null;
-            state.selectedPermission = 'view';
+            state.selectedPermission = "view";
         },
-        setSelectedPermission: (state, action: PayloadAction<'view' | 'edit'>) => {
+        setSelectedPermission: (
+            state,
+            action: PayloadAction<"view" | "edit">,
+        ) => {
             state.selectedPermission = action.payload;
         },
         generateTokenStart: (state) => {
@@ -57,7 +60,7 @@ export const sharingSlice = createSlice({
         },
         removeShareToken: (state, action: PayloadAction<string>) => {
             state.shareTokens = state.shareTokens.filter(
-                token => token.token !== action.payload
+                (token) => token.token !== action.payload,
             );
         },
         // Placeholder for API integration
