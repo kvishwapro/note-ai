@@ -31,7 +31,7 @@ const NotesPage = () => {
     const [selectedNote, setSelectedNote] = useState<{
         id: string;
         title: string;
-        content: string;
+        notes: string;
     } | null>(null);
 
     const {
@@ -46,7 +46,7 @@ const NotesPage = () => {
 
     useEffect(() => {
         getNotesWithCache();
-    }, []);
+    }, [getNotesWithCache]);
 
     const handleInputFocus = () => {
         setIsExpanded(true);
@@ -60,7 +60,7 @@ const NotesPage = () => {
         setSelectedNote({
             id: String(note.id),
             title: note.title,
-            content: note.notes,
+            notes: note.notes,
         });
         setIsModalOpen(true);
     };
@@ -68,12 +68,12 @@ const NotesPage = () => {
     const handleUpdateNote = async (updatedNote: {
         id: string;
         title: string;
-        content: string;
+        notes: string;
     }) => {
         try {
             await updateNote(Number(updatedNote.id), {
                 title: updatedNote.title,
-                notes: updatedNote.content,
+                notes: updatedNote.notes,
             });
         } catch (err) {
             console.error("Failed to update note:", err);

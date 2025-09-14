@@ -23,14 +23,14 @@ interface NoteEditorProps {
     note: {
         id: string;
         title: string;
-        content: string;
+        notes: string;
     };
     open: boolean;
     onClose: () => void;
     onUpdate: (updatedNote: {
         id: string;
         title: string;
-        content: string;
+        notes: string;
     }) => void;
 }
 
@@ -42,8 +42,8 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
     onClose,
     onUpdate,
 }) => {
-    const [title, setTitle] = useState(note.title);
-    const [content, setContent] = useState(note.content);
+    const [title, setTitle] = useState(note.title || "");
+    const [notes, setContent] = useState(note.notes || "");
     const [expandUI, setExpandUI] = useState(false);
     const [activeAction, setActiveAction] = useState<AiAction | null>(null);
 
@@ -54,14 +54,14 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        setTitle(note.title);
-        setContent(note.content);
+        setTitle(note.title || "");
+        setContent(note.notes || "");
     }, [note]);
 
     // Remove duplicate dispatch declaration
 
     const handleUpdate = () => {
-        onUpdate({ id: note.id, title, content });
+        onUpdate({ id: note.id, title, notes });
         onClose();
     };
 
@@ -299,7 +299,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
                                             pt: 1,
                                         }}
                                         placeholder="Take a note..."
-                                        value={content}
+                                        value={notes}
                                         onChange={(e) =>
                                             setContent(e.target.value)
                                         }
@@ -501,7 +501,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
                                         minHeight: 120,
                                     }}
                                     placeholder="Take a note..."
-                                    value={content}
+                                    value={notes}
                                     onChange={(e) => setContent(e.target.value)}
                                     multiline
                                     fullWidth

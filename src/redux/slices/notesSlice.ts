@@ -28,7 +28,7 @@ const initialState: NotesState = {
 export const fetchAllNotes = createAsyncThunk(
     "notes/fetchAll",
     async (getToken: () => Promise<string | null>) => {
-        return await getAllNotes(getToken);
+        return await getAllNotes();
     },
 );
 
@@ -41,7 +41,7 @@ export const fetchNoteById = createAsyncThunk(
         noteId: number;
         getToken: () => Promise<string | null>;
     }) => {
-        return await getNoteById(noteId, getToken);
+        return await getNoteById(noteId);
     },
 );
 
@@ -54,7 +54,7 @@ export const createNewNote = createAsyncThunk(
         noteData: NoteCreate;
         getToken: () => Promise<string | null>;
     }) => {
-        return await createNote(noteData, getToken);
+        return await createNote(noteData);
     },
 );
 
@@ -69,7 +69,7 @@ export const updateExistingNote = createAsyncThunk(
         noteData: NoteUpdate;
         getToken: () => Promise<string | null>;
     }) => {
-        return await updateNote(noteId, noteData, getToken);
+        return await updateNote(noteId, noteData);
     },
 );
 
@@ -82,7 +82,7 @@ export const deleteExistingNote = createAsyncThunk(
         noteId: number;
         getToken: () => Promise<string | null>;
     }) => {
-        await deleteNote(noteId, getToken);
+        await deleteNote(noteId);
         return noteId;
     },
 );

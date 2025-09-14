@@ -1,25 +1,23 @@
-import { api, createApiClient } from "../libs/axios";
+import { api } from "../libs/axios";
 
 // Define types for notes
-interface Note {
+export interface Note {
   id: number;
   title: string;
-  content: string;
+  notes: string;
   created_at: string;
   updated_at: string;
   // Add other properties as needed
 }
 
-interface NoteCreate {
+export interface NoteCreate {
   title: string;
-  content: string;
-  // Add other properties as needed
+  notes: string;
 }
 
-interface NoteUpdate {
+export interface NoteUpdate {
   title?: string;
-  content?: string;
-  // Add other properties as needed
+  notes?: string;
 }
 
 export const createNote = async (

@@ -36,7 +36,7 @@ This directory contains the Redux setup for the application.
       const dispatch = useAppDispatch();
 
       const handleAddNote = () => {
-        dispatch(addNote({ title: "New Note", content: "Note content" }));
+        dispatch(addNote({ title: "New Note", notes: "Note notes" }));
       };
 
       return (
@@ -47,7 +47,7 @@ This directory contains the Redux setup for the application.
           {notes.map(note => (
             <div key={note.id}>
               <h3>{note.title}</h3>
-              <p>{note.content}</p>
+              <p>{note.notes}</p>
             </div>
           ))}
         </div>
