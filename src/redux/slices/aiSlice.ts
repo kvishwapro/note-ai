@@ -26,9 +26,7 @@ export const fetchAiSummary = createAsyncThunk(
                 `http://localhost:8000/api/stream-summary/${noteId}`,
             );
             return response.data.summary || response.data;
-        } catch (error: {
-            response: { data: { message: string } } | { message: string };
-        }) {
+        } catch (error : any) {
             return rejectWithValue(
                 error.response?.data?.message ||
                     error.message ||
@@ -47,9 +45,7 @@ export const fetchAiTasks = createAsyncThunk(
                 `http://localhost:8000/api/convert-task/${noteId}`,
             );
             return response.data.tasks || [];
-        } catch (error: {
-            response: { data: { message: string } } | { message: string };
-        }) {
+        } catch (error: any) {
             return rejectWithValue(
                 error.response?.data?.message ||
                     error.message ||

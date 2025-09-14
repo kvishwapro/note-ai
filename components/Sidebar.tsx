@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
     Drawer,
     List,
@@ -23,6 +23,11 @@ const Sidebar: React.FC = () => {
     const drawerWidth = 280; // M3 recommended width
     const router = useRouter();
     const pathname = usePathname();
+
+    useEffect(() => {
+        router.prefetch("/notes");
+        router.prefetch("/tasks");
+    }, [router]);
 
     return (
         <Drawer
